@@ -21,6 +21,7 @@ const tileData = {
         replaceable: false,
         passable: false,
         under: false,
+        fluid: false,
     },
     0: {
         name: "water",
@@ -29,8 +30,9 @@ const tileData = {
         holdable: false,
         breakable: false,
         replaceable: true,
-        passable: false,
+        passable: true,
         under: false,
+        fluid: true,
     },
     1: {
         name: "grass",
@@ -41,6 +43,7 @@ const tileData = {
         replaceable: true,
         passable: true,
         under: false,
+        fluid: false,
     },
     2: {
         name: "sand",
@@ -51,6 +54,7 @@ const tileData = {
         replaceable: true,
         passable: true,
         under: false,
+        fluid: false,
     },
     3: {
         name: "wood block",
@@ -61,6 +65,7 @@ const tileData = {
         replaceable: false,
         passable: false,
         under: false,
+        fluid: false,
     },
     4: {
         name: "wood floor",
@@ -71,6 +76,7 @@ const tileData = {
         replaceable: true,
         passable: true,
         under: false,
+        fluid: false,
     },
     5: {
         name: "stone",
@@ -81,6 +87,7 @@ const tileData = {
         replaceable: false,
         passable: false,
         under: false,
+        fluid: false,
     },
     6: {
         name: "air",
@@ -91,6 +98,7 @@ const tileData = {
         replaceable: true,
         passable: true,
         under: false,
+        fluid: false,
     },
     7: {
         name: "tree",
@@ -101,6 +109,7 @@ const tileData = {
         replaceable: false,
         passable: false,
         under: 1,
+        fluid: false,
     },
 }
 
@@ -233,11 +242,11 @@ function move(x, y) {
         saveData.pos.y += y
     }
 
-    return saveData.pos
+    return tile
 }
 
 
-function craft(recipe=recipeData[saveData.selectedrecipe]) {
+function craft(recipe = recipeData[saveData.selectedrecipe]) {
     allowed = true
     for (let i in recipe.inputs) {
         if (saveData.inventory[recipe.inputs[i].type] < recipe.inputs[i].amount) {
@@ -289,6 +298,71 @@ function placeTile(xo, yo, type) {
     return tile
 }
 
+// Code with help of ChatGPT
+function checkfluidflow(x, y) {
+    if (world[y]?.[x]?.t !== 6) return;
+
+    let connectedairs = new Set();
+    let newconnectedairs = new Set();
+    connectedairs.add(`${x},${y}`);
+
+    let newconnections = true;
+
+    while (newconnections) {
+        newconnections = false;
+
+        for (let coord of connectedairs) {
+            let [cx, cy] = coord.split(',').map(Number);
+
+            // Check all four neighbors
+            [[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(([dx, dy]) => {
+                let nx = cx + dx, ny = cy + dy;
+
+                // Boundary check: ensure `ny` and `nx` are valid indices
+                if (world[ny]?.[nx]?.t === 6) {
+                    let neighborKey = `${nx},${ny}`;
+                    if (!connectedairs.has(neighborKey)) {
+                        newconnections = true;
+                        newconnectedairs.add(neighborKey);
+                    }
+                }
+            });
+        }
+
+        newconnectedairs.forEach(tile => connectedairs.add(tile));
+        newconnectedairs.clear();
+    }
+
+    // Check for connected fluid
+    let connectedfluid = false;
+    let connectedfluidtype;
+
+    for (let coord of connectedairs) {
+        let [cx, cy] = coord.split(',').map(Number);
+
+        // Check all four neighbors for fluid
+        [[0, -1], [0, 1], [-1, 0], [1, 0]].forEach(([dx, dy]) => {
+            let nx = cx + dx, ny = cy + dy;
+
+            // Boundary check: ensure `ny` and `nx` are valid indices
+            if (tileData[world[ny]?.[nx]?.t]?.fluid) {
+                connectedfluid = true;
+                connectedfluidtype = world[ny][nx].t;
+            }
+        });
+
+        if (connectedfluid) break;
+    }
+
+    // Update all connected tiles
+    if (connectedfluid) {
+        connectedairs.forEach(coord => {
+            let [cx, cy] = coord.split(',').map(Number);
+            world[cy][cx].t = connectedfluidtype;
+        });
+    }
+}
+
 function breakTile(xo, yo) {
     let x = xo + centerinworlddata[1] + saveData.pos.x
     let y = yo + centerinworlddata[0] + saveData.pos.y
@@ -299,7 +373,7 @@ function breakTile(xo, yo) {
     if (tileData[tile].breakable) {
         if (tileData[tile].holdable) { saveData.inventory[tile] += 1 }
         if (tileData[tile].under != false && world[y][x].n == 1) { tile = world[y][x].t = tileData[tile].under }
-        else { tile = world[y][x].t = 6 }
+        else { tile = world[y][x].t = 6; checkfluidflow(x, y) }
         world[y][x].n = 0
     }
 
@@ -414,27 +488,43 @@ updateDisplaySLOW()
 document.addEventListener('keydown', function (event) {
     if (move_cooldown == false) {
         if (event.key == 'w') {
-            move(0, -1)
+            let tile = move(0, -1)
             move_cooldown = true
-            window.setTimeout(function () { move_cooldown = false }, 200)
+            let time = 200
+            if (tileData[tile].fluid == true) {
+                time = 2000
+            }
+            window.setTimeout(function () { move_cooldown = false }, time)
         }
 
         else if (event.key == 's') {
-            move(0, 1)
+            let tile = move(0, 1)
             move_cooldown = true
-            window.setTimeout(function () { move_cooldown = false }, 200)
+            let time = 200
+            if (tileData[tile].fluid == true) {
+                time = 2000
+            }
+            window.setTimeout(function () { move_cooldown = false }, time)
         }
 
         else if (event.key == 'a') {
-            move(-1, 0)
+            let tile = move(-1, 0)
             move_cooldown = true
-            window.setTimeout(function () { move_cooldown = false }, 200)
+            let time = 200
+            if (tileData[tile].fluid == true) {
+                time = 2000
+            }
+            window.setTimeout(function () { move_cooldown = false }, time)
         }
 
         else if (event.key == 'd') {
-            move(1, 0)
+            let tile = move(1, 0)
             move_cooldown = true
-            window.setTimeout(function () { move_cooldown = false }, 200)
+            let time = 200
+            if (tileData[tile].fluid == true) {
+                time = 2000
+            }
+            window.setTimeout(function () { move_cooldown = false }, time)
         }
 
         else if (event.key == 'q') {
