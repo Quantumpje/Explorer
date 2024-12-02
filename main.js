@@ -111,6 +111,17 @@ const tileData = {
         under: 1,
         fluid: false,
     },
+    8: {
+        name: "path",
+        color: "#4F8A2B",
+        placeable: true,
+        holdable: true,
+        breakable: true,
+        replaceable: true,
+        passable: true,
+        under: false,
+        fluid: false,
+    },
 }
 
 const placeabletiles = []
@@ -171,6 +182,26 @@ const recipeData = {
             {
                 amount: 1,
                 type: 5,
+            },
+        ],
+    },
+    3: {
+        id: 3,
+        name: "5x grass + 1x sand --> 5x path",
+        inputs: [
+            {
+                amount: 5,
+                type: 1,
+            },
+            {
+                amount: 1,
+                type: 2,
+            },
+        ],
+        outputs: [
+            {
+                amount: 5,
+                type: 8,
             },
         ],
     },
