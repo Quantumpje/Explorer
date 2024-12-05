@@ -7,8 +7,6 @@ const saveData = {
     usedworldseed: null,
     usedcenter: null
 }
-var move_cooldown = false
-var place_cooldown = false
 
 
 const tileData = {
@@ -90,8 +88,8 @@ const tileData = {
         fluid: false,
     },
     6: {
-        name: "air",
-        color: "#FFFFFF",
+        name: "groundstone",
+        color: "#5C5C5C",
         placeable: false,
         holdable: false,
         breakable: false,
@@ -516,114 +514,207 @@ function updateDisplaySLOW() {
 updateDisplaySLOW()
 
 
+const pressedkeys = {
+    w: false,
+    s: false,
+    a: false,
+    d: false,
+    q: false,
+    e: false,
+    f: false,
+    g: false,
+}
+
 document.addEventListener('keydown', function (event) {
-    if (move_cooldown == false) {
-        if (event.key == 'w') {
-            let tile = move(0, -1)
-            move_cooldown = true
-            let time = 200
-            if (tileData[tile].fluid == true) {
-                time = 2000
-            }
-            window.setTimeout(function () { move_cooldown = false }, time)
+    if (pressedkeys[event.key] != undefined) {
+        pressedkeys[event.key] = true
+    }
+})
+document.addEventListener('keyup', function (event) {
+    if (pressedkeys[event.key] != undefined) {
+        pressedkeys[event.key] = false
+    }
+})
+
+const cooldowns = {
+    move: false,
+    rotate: false,
+    place: false,
+}
+
+const intervals = {}
+function cooldown(type, time) {
+    cooldowns[type] = true
+    intervals[type] = window.setInterval(function () {
+        cooldowns[type] = false
+        window.clearInterval(intervals[type])
+    }, time)
+}
+
+window.setInterval(function () {
+    if (pressedkeys.w && !pressedkeys.s && !pressedkeys.a && !pressedkeys.d && cooldowns['move'] == false) {
+        let tile = move(0, -1)
+        let time = 400
+        if (tileData[tile].fluid == true) {
+            time = 1250
         }
-
-        else if (event.key == 's') {
-            let tile = move(0, 1)
-            move_cooldown = true
-            let time = 200
-            if (tileData[tile].fluid == true) {
-                time = 2000
-            }
-            window.setTimeout(function () { move_cooldown = false }, time)
+        if (tile == 8) {
+            time = 250
         }
+        cooldown('move', time)
+    }
 
-        else if (event.key == 'a') {
-            let tile = move(-1, 0)
-            move_cooldown = true
-            let time = 200
-            if (tileData[tile].fluid == true) {
-                time = 2000
-            }
-            window.setTimeout(function () { move_cooldown = false }, time)
+    if (!pressedkeys.w && pressedkeys.s && !pressedkeys.a && !pressedkeys.d && cooldowns['move'] == false) {
+        let tile = move(0, 1)
+        let time = 400
+        if (tileData[tile].fluid == true) {
+            time = 1250
         }
-
-        else if (event.key == 'd') {
-            let tile = move(1, 0)
-            move_cooldown = true
-            let time = 200
-            if (tileData[tile].fluid == true) {
-                time = 2000
-            }
-            window.setTimeout(function () { move_cooldown = false }, time)
+        if (tile == 8) {
+            time = 250
         }
+        cooldown('move', time)
+    }
 
-        else if (event.key == 'q') {
-            rotate(-1)
-            move_cooldown = true
-            window.setTimeout(function () { move_cooldown = false }, 150)
+    if (!pressedkeys.w && !pressedkeys.s && pressedkeys.a && !pressedkeys.d && cooldowns['move'] == false) {
+        let tile = move(-1, 0)
+        let time = 400
+        if (tileData[tile].fluid == true) {
+            time = 1250
         }
-
-        else if (event.key == 'e') {
-            rotate(1)
-            move_cooldown = true
-            window.setTimeout(function () { move_cooldown = false }, 150)
+        if (tile == 8) {
+            time = 250
         }
+        cooldown('move', time)
+    }
 
-        else if (event.key == '1') {
-            let previous = placeabletiles[placeabletiles.findIndex(function (v) { return v == saveData.selectedtile }) - 1]
-            if (previous != undefined) {
-                saveData.selectedtile = previous
-            }
+    if (!pressedkeys.w && !pressedkeys.s && !pressedkeys.a && pressedkeys.d && cooldowns['move'] == false) {
+        let tile = move(1, 0)
+        let time = 400
+        if (tileData[tile].fluid == true) {
+            time = 1250
         }
-
-        else if (event.key == '2') {
-            let next = placeabletiles[placeabletiles.findIndex(function (v) { return v == saveData.selectedtile }) + 1]
-            if (next != undefined) {
-                saveData.selectedtile = next
-            }
+        if (tile == 8) {
+            time = 250
         }
+        cooldown('move', time)
+    }
 
-        else if (event.key == '3') {
-            let previous = recipes[recipes.findIndex(function (v) { return v == saveData.selectedrecipe }) - 1]
-            if (previous != undefined) {
-                saveData.selectedrecipe = previous
-            }
+
+    if (pressedkeys.w && !pressedkeys.s && pressedkeys.a && !pressedkeys.d && cooldowns['move'] == false) {
+        let tile = move(-1, -1)
+        let time = 600
+        if (tileData[tile].fluid == true) {
+            time = 2000
         }
-
-        else if (event.key == '4') {
-            let next = recipes[recipes.findIndex(function (v) { return v == saveData.selectedrecipe }) + 1]
-            if (next != undefined) {
-                saveData.selectedrecipe = next
-            }
+        if (tile == 8) {
+            time = 350
         }
+        cooldown('move', time)
+    }
 
-        else if (event.key == 'f') {
-            let x = 0
-            let y = 0
-
-            if (saveData.turning == 1) { y += -1 }
-            if (saveData.turning == 2) { x += -1 }
-            if (saveData.turning == 3) { y += 1 }
-            if (saveData.turning == 4) { x += 1 }
-
-            placeTile(x, y, saveData.selectedtile)
-            place_cooldown = true
-            window.setTimeout(function () { place_cooldown = false }, 200)
+    if (pressedkeys.w && !pressedkeys.s && !pressedkeys.a && pressedkeys.d && cooldowns['move'] == false) {
+        let tile = move(1, -1)
+        let time = 600
+        if (tileData[tile].fluid == true) {
+            time = 2000
         }
+        if (tile == 8) {
+            time = 350
+        }
+        cooldown('move', time)
+    }
 
-        else if (event.key == 'g') {
-            let x = 0
-            let y = 0
+    if (!pressedkeys.w && pressedkeys.s && pressedkeys.a && !pressedkeys.d && cooldowns['move'] == false) {
+        let tile = move(-1, 1)
+        let time = 600
+        if (tileData[tile].fluid == true) {
+            time = 2000
+        }
+        if (tile == 8) {
+            time = 350
+        }
+        cooldown('move', time)
+    }
 
-            if (saveData.turning == 1) { y += -1 }
-            if (saveData.turning == 2) { x += -1 }
-            if (saveData.turning == 3) { y += 1 }
-            if (saveData.turning == 4) { x += 1 }
+    if (!pressedkeys.w && pressedkeys.s && !pressedkeys.a && pressedkeys.d && cooldowns['move'] == false) {
+        let tile = move(1, 1)
+        let time = 600
+        if (tileData[tile].fluid == true) {
+            time = 2000
+        }
+        if (tile == 8) {
+            time = 350
+        }
+        cooldown('move', time)
+    }
 
-            breakTile(x, y)
-            place_cooldown = true
-            window.setTimeout(function () { place_cooldown = false }, 200)
+
+    if (pressedkeys.q && cooldowns['rotate'] == false) {
+        rotate(-1)
+        cooldown('rotate', 150)
+    }
+
+    if (pressedkeys.e && cooldowns['rotate'] == false) {
+        rotate(1)
+        cooldown('rotate', 150)
+    }
+
+
+    if (pressedkeys.f && cooldowns['place'] == false) {
+        let x = 0
+        let y = 0
+
+        if (saveData.turning == 1) { y += -1 }
+        if (saveData.turning == 2) { x += -1 }
+        if (saveData.turning == 3) { y += 1 }
+        if (saveData.turning == 4) { x += 1 }
+
+        placeTile(x, y, saveData.selectedtile)
+        cooldown('place', 200)
+    }
+
+    if (pressedkeys.g && cooldowns['place'] == false) {
+        let x = 0
+        let y = 0
+
+        if (saveData.turning == 1) { y += -1 }
+        if (saveData.turning == 2) { x += -1 }
+        if (saveData.turning == 3) { y += 1 }
+        if (saveData.turning == 4) { x += 1 }
+
+        breakTile(x, y)
+        cooldown('place', 200)
+    }
+}, 50)
+
+document.addEventListener('keydown', function (event) {
+    if (event.key == 1) {
+        let previous = placeabletiles[placeabletiles.findIndex(function (v) { return v == saveData.selectedtile }) - 1]
+        if (previous != undefined) {
+            saveData.selectedtile = previous
+        }
+    }
+
+    if (event.key == 2) {
+        let next = placeabletiles[placeabletiles.findIndex(function (v) { return v == saveData.selectedtile }) + 1]
+        if (next != undefined) {
+            saveData.selectedtile = next
+        }
+    }
+
+
+    if (event.key == 3) {
+        let previous = recipes[recipes.findIndex(function (v) { return v == saveData.selectedrecipe }) - 1]
+        if (previous != undefined) {
+            saveData.selectedrecipe = previous
+        }
+    }
+
+    if (event.key == 4) {
+        let next = recipes[recipes.findIndex(function (v) { return v == saveData.selectedrecipe }) + 1]
+        if (next != undefined) {
+            saveData.selectedrecipe = next
         }
     }
 })
