@@ -12,7 +12,6 @@ const saveData = {
 const tileData = {
     none: {
         name: "barrier",
-        color: "#FFFFFF",
         placeable: false,
         holdable: false,
         breakable: false,
@@ -23,7 +22,6 @@ const tileData = {
     },
     0: {
         name: "water",
-        color: "#1CA3EC",
         placeable: false,
         holdable: false,
         breakable: false,
@@ -34,7 +32,6 @@ const tileData = {
     },
     1: {
         name: "grass",
-        color: "#41980A",
         placeable: true,
         holdable: true,
         breakable: true,
@@ -45,7 +42,6 @@ const tileData = {
     },
     2: {
         name: "sand",
-        color: "#EFDD6F",
         placeable: true,
         holdable: true,
         breakable: true,
@@ -56,7 +52,6 @@ const tileData = {
     },
     3: {
         name: "wood block",
-        color: "#614A27",
         placeable: true,
         holdable: true,
         breakable: true,
@@ -67,7 +62,6 @@ const tileData = {
     },
     4: {
         name: "wood floor",
-        color: "#705832",
         placeable: true,
         holdable: true,
         breakable: true,
@@ -78,7 +72,6 @@ const tileData = {
     },
     5: {
         name: "stone",
-        color: "#757575",
         placeable: true,
         holdable: true,
         breakable: true,
@@ -89,7 +82,6 @@ const tileData = {
     },
     6: {
         name: "groundstone",
-        color: "#5C5C5C",
         placeable: false,
         holdable: false,
         breakable: false,
@@ -100,7 +92,6 @@ const tileData = {
     },
     7: {
         name: "tree",
-        color: "#334D25",
         placeable: true,
         holdable: true,
         breakable: true,
@@ -111,7 +102,6 @@ const tileData = {
     },
     8: {
         name: "path",
-        color: "#4F8A2B",
         placeable: true,
         holdable: true,
         breakable: true,
@@ -485,17 +475,14 @@ function drawcanvasN() {
             let tile = world[y + centerinworlddata[0] + saveData.pos.y]?.[x + centerinworlddata[1] + saveData.pos.x]?.t
             if (tile == undefined) { tile = "none" }
 
-            ctxN.fillStyle = tileData[tile].color
-            ctxN.fillRect((x + worldscreenhalfN) * tilepixelsizeN, (y + worldscreenhalfN) * tilepixelsizeN, tilepixelsizeN, tilepixelsizeN)
+            ctxN.drawImage(document.getElementById(`texture_${tile}`), (x + worldscreenhalfN) * tilepixelsizeN, (y + worldscreenhalfN) * tilepixelsizeN, tilepixelsizeN, tilepixelsizeN)
         }
     }
 
-    ctxN.fillStyle = "black"
-    ctxN.fillRect(worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, tilepixelsizeN / 2, tilepixelsizeN / 2)
-    if (saveData.turning == 1) { ctxN.fillRect(worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4 + 4, worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4 - 8, tilepixelsizeN / 4, tilepixelsizeN / 4) }
-    if (saveData.turning == 2) { ctxN.fillRect(worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4 - 8, worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4 + 4, tilepixelsizeN / 4, tilepixelsizeN / 4) }
-    if (saveData.turning == 3) { ctxN.fillRect(worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4 + 4, worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4 + 16, tilepixelsizeN / 4, tilepixelsizeN / 4) }
-    if (saveData.turning == 4) { ctxN.fillRect(worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4 + 16, worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4 + 4, tilepixelsizeN / 4, tilepixelsizeN / 4) }
+    if (saveData.turning == 1) { ctxN.drawImage(document.getElementById('texture_player1'), worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, tilepixelsizeN / 2, tilepixelsizeN / 2) }
+    if (saveData.turning == 2) { ctxN.drawImage(document.getElementById('texture_player2'), worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, tilepixelsizeN / 2, tilepixelsizeN / 2) }
+    if (saveData.turning == 3) { ctxN.drawImage(document.getElementById('texture_player3'), worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, tilepixelsizeN / 2, tilepixelsizeN / 2) }
+    if (saveData.turning == 4) { ctxN.drawImage(document.getElementById('texture_player4'), worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, worldscreenhalfN * tilepixelsizeN + tilepixelsizeN / 4, tilepixelsizeN / 2, tilepixelsizeN / 2) }
 }
 
 function drawcanvasLM() {
@@ -504,13 +491,11 @@ function drawcanvasLM() {
             let tile = world[y + centerinworlddata[0] + saveData.pos.y]?.[x + centerinworlddata[1] + saveData.pos.x]?.t
             if (tile == undefined) { tile = "none" }
 
-            ctxLM.fillStyle = tileData[tile].color
-            ctxLM.fillRect((x + worldscreenhalfLM) * tilepixelsizeLM, (y + worldscreenhalfLM) * tilepixelsizeLM, tilepixelsizeLM, tilepixelsizeLM)
+            ctxLM.drawImage(document.getElementById(`texture_${tile}`), (x + worldscreenhalfLM) * tilepixelsizeLM, (y + worldscreenhalfLM) * tilepixelsizeLM, tilepixelsizeLM, tilepixelsizeLM)
         }
     }
 
-    ctxLM.fillStyle = "black"
-    ctxLM.fillRect(worldscreenhalfLM * tilepixelsizeLM - tilepixelsizeLM / 4, worldscreenhalfLM * tilepixelsizeLM - tilepixelsizeLM / 4, tilepixelsizeLM * 2, tilepixelsizeLM * 2)
+    ctxLM.drawImage(document.getElementById('texture_player1'), worldscreenhalfLM * tilepixelsizeLM - tilepixelsizeLM / 4, worldscreenhalfLM * tilepixelsizeLM - tilepixelsizeLM / 4, tilepixelsizeLM * 2, tilepixelsizeLM * 2)
 }
 
 function drawcanvasW() {
@@ -519,13 +504,11 @@ function drawcanvasW() {
             let tile = world[y + worldsizehalf]?.[x + worldsizehalf]?.t
             if (tile == undefined) { tile = "none" }
 
-            ctxW.fillStyle = tileData[tile].color
-            ctxW.fillRect((x + worldsizehalf) * wholemappixelsize, (y + worldsizehalf) * wholemappixelsize, wholemappixelsize, wholemappixelsize)
+            ctxW.drawImage(document.getElementById(`texture_${tile}`), (x + worldsizehalf) * wholemappixelsize, (y + worldsizehalf) * wholemappixelsize, wholemappixelsize, wholemappixelsize)
         }
     }
 
-    ctxW.fillStyle = "black"
-    ctxW.fillRect((saveData.usedcenter[1] + saveData.pos.x) * wholemappixelsize - wholemappixelsize, (saveData.usedcenter[0] + saveData.pos.y) * wholemappixelsize - wholemappixelsize, wholemappixelsize * 4, wholemappixelsize * 4)
+    ctxW.drawImage(document.getElementById('texture_player1'), (saveData.usedcenter[1] + saveData.pos.x) * wholemappixelsize - wholemappixelsize, (saveData.usedcenter[0] + saveData.pos.y) * wholemappixelsize - wholemappixelsize, wholemappixelsize * 4, wholemappixelsize * 4)
 }
 
 
@@ -533,17 +516,26 @@ const pos_display = document.getElementById("pos_display")
 const selectedtile_display = document.getElementById("selectedtile_display")
 const selectedrecipe_display = document.getElementById("selectedrecipe_display")
 const inventory_display = document.getElementById("inventory_display")
-function updateDisplay() {
+
+function updateDisplayNORMAL() {
     drawcanvasN()
-    drawcanvasLM()
     pos_display.innerHTML = `You are at: (${saveData.pos.x}, ${saveData.pos.y}).`
     selectedtile_display.innerHTML = `Selected tile type to place: ${tileData[saveData.selectedtile].name}. You have ${saveData.inventory[saveData.selectedtile]}.`
     selectedrecipe_display.innerHTML = `Selected recipe: ${recipeData[saveData.selectedrecipe].name}.`
-}; window.setInterval(updateDisplay, 200)
+}
+window.setInterval(updateDisplayNORMAL, 100)
+
+function updateDisplayMEDIUM() {
+    drawcanvasLM()
+}
+window.setTimeout(updateDisplayMEDIUM, 50)
+window.setInterval(updateDisplayMEDIUM, 1000)
+
 function updateDisplaySLOW() {
     drawcanvasW()
-}; window.setInterval(updateDisplaySLOW, 2500)
-updateDisplaySLOW()
+}
+window.setTimeout(updateDisplaySLOW, 50)
+window.setInterval(updateDisplaySLOW, 2500)
 
 
 const pressedkeys = {
