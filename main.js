@@ -309,8 +309,8 @@ for (let i in saveData) {
 }
 
 let loadworld = localStorage.getItem("Explorer-World");
-if (savegame && loadworld) { loadworld = convertoldworld(savegame, loadworld); }
-if (savegame && loadworld) { var saveworld = decompressWorld2D(JSON.parse(loadworld)); }
+if (savegame && loadworld) { loadworld = convertoldworld(savegame, JSON.parse(loadworld)); }
+if (savegame && loadworld) { var saveworld = decompressWorld2D(loadworld); }
 
 let potentialnewseed = Math.floor(Math.random() * 65536 + 1);
 const world = saveworld ? saveworld : generateWorld(potentialnewseed);
@@ -499,9 +499,9 @@ function noiseToTile(x, y, seed) {
 }
 
 function noiseToTile_CheckMaxSize_CheckerPattern(x, y) {
-    let tiletype = 0
+    let tiletype = 0;
     if ((y % 2 === 0 && x % 2 !== 0) || (y % 2 !== 0 && x % 2 === 0)) {
-        tiletype = 1
+        tiletype = 1;
     }
 
     return { t: tiletype, n: 1 };
