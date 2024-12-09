@@ -312,12 +312,13 @@ let loadworld = localStorage.getItem("Explorer-World");
 if (savegame && loadworld) { loadworld = convertoldworld(savegame, JSON.parse(loadworld)); }
 if (savegame && loadworld) { var saveworld = decompressWorld2D(loadworld); }
 
+
+var potentialcenter = [Math.floor(Math.random() * 50 + 100), Math.floor(Math.random() * 50 + 100)];
+
 let potentialnewseed = Math.floor(Math.random() * 65536 + 1);
 const world = saveworld ? saveworld : generateWorld(potentialnewseed);
 saveData.usedworldseed = saveworld ? saveData.usedworldseed : potentialnewseed;
 
-
-let potentialcenter = [Math.floor(Math.random() * 50 + 100), Math.floor(Math.random() * 50 + 100)];
 
 const centerinworlddata = saveData.usedcenter ? saveData.usedcenter : potentialcenter;
 saveData.usedcenter = saveData.usedcenter ? saveData.usedcenter : potentialcenter;
@@ -396,6 +397,24 @@ function placeTile(xo, yo, type) {
     return tile;
 }
 
+function breakTile(xo, yo) {
+    let x = xo + centerinworlddata[1] + saveData.pos.x;
+    let y = yo + centerinworlddata[0] + saveData.pos.y;
+
+    let tile = world[y]?.[x].t;
+    if (tile == undefined) { tile = "none"; }
+
+    if (tileData[tile].breakable) {
+        if (tileData[tile].holdable) { saveData.inventory[tile] += 1; }
+        if (tileData[tile].under != false && world[y][x].n == 1) { tile = world[y][x].t = tileData[tile].under; }
+        else { tile = world[y][x].t = 6; checkfluidflow(x, y); }
+        world[y][x].n = 0;
+    }
+
+    return tile;
+}
+
+
 // Code with help of ChatGPT
 function checkfluidflow(x, y) {
     if (world[y]?.[x]?.t !== 6) return;
@@ -461,23 +480,6 @@ function checkfluidflow(x, y) {
     }
 }
 
-function breakTile(xo, yo) {
-    let x = xo + centerinworlddata[1] + saveData.pos.x;
-    let y = yo + centerinworlddata[0] + saveData.pos.y;
-
-    let tile = world[y]?.[x].t;
-    if (tile == undefined) { tile = "none"; }
-
-    if (tileData[tile].breakable) {
-        if (tileData[tile].holdable) { saveData.inventory[tile] += 1; }
-        if (tileData[tile].under != false && world[y][x].n == 1) { tile = world[y][x].t = tileData[tile].under; }
-        else { tile = world[y][x].t = 6; checkfluidflow(x, y); }
-        world[y][x].n = 0;
-    }
-
-    return tile;
-}
-
 
 function noiseToTile(x, y, seed) {
     noise.seed(seed);
@@ -514,7 +516,7 @@ function generateWorld(seed) {
         }
     }
 
-    while (world[potentialcenter[0]][potentialcenter[1]].t != 1) {
+    while (data[potentialcenter[0]][potentialcenter[1]].t != 1) {
         potentialcenter = [Math.floor(Math.random() * 50 + 100), Math.floor(Math.random() * 50 + 100)];
     }
 
