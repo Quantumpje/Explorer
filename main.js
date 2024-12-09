@@ -251,7 +251,7 @@ function decompressWorld2D(compressedWorld) {
         return compressedRow.split("|").flatMap(chunk => {
             const [data, count] = chunk.split("x");
             const [t, n] = data.split(",").map(Number);
-            return Array(Number(count)).fill({ t, n });
+            return Array(Number(count)).fill().map(() => ({ t, n }));
         });
     });
 }
