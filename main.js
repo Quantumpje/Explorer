@@ -319,8 +319,10 @@ saveData.usedworldseed = saveworld ? saveData.usedworldseed : potentialnewseed;
 
 let potentialcenter = [Math.floor(Math.random() * 50 + 100), Math.floor(Math.random() * 50 + 100)];
 
-while (world[potentialcenter[0]][potentialcenter[1]].t != 1) {
-    potentialcenter = [Math.floor(Math.random() * 50 + 100), Math.floor(Math.random() * 50 + 100)];
+if (!saveworld) {
+    while (world[potentialcenter[0]][potentialcenter[1]].t != 1) {
+        potentialcenter = [Math.floor(Math.random() * 50 + 100), Math.floor(Math.random() * 50 + 100)];
+    }
 }
 
 const centerinworlddata = saveData.usedcenter ? saveData.usedcenter : potentialcenter;
