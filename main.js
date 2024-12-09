@@ -595,7 +595,7 @@ function updateDisplaySLOW() {
     drawcanvasW();
 }
 window.setTimeout(updateDisplaySLOW, 50);
-window.setInterval(updateDisplaySLOW, 2500);
+window.setInterval(updateDisplaySLOW, 10000);
 
 
 const pressedkeys = {
