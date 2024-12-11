@@ -557,7 +557,7 @@ function drawcanvasLM() {
         }
     }
 
-    ctxLM.drawImage(document.getElementById('texture_player1'), worldscreenhalfLM * tilepixelsizeLM - tilepixelsizeLM / 4, worldscreenhalfLM * tilepixelsizeLM - tilepixelsizeLM / 4, tilepixelsizeLM * 2, tilepixelsizeLM * 2);
+    ctxLM.drawImage(document.getElementById('texture_player1'), worldscreenhalfLM * tilepixelsizeLM - tilepixelsizeLM / 2, worldscreenhalfLM * tilepixelsizeLM - tilepixelsizeLM / 2, tilepixelsizeLM * 2, tilepixelsizeLM * 2);
 }
 
 function drawcanvasW() {
@@ -570,7 +570,7 @@ function drawcanvasW() {
         }
     }
 
-    ctxW.drawImage(document.getElementById('texture_player1'), (saveData.usedcenter[1] + saveData.pos.x) * wholemappixelsize - wholemappixelsize, (saveData.usedcenter[0] + saveData.pos.y) * wholemappixelsize - wholemappixelsize, wholemappixelsize * 4, wholemappixelsize * 4);
+    ctxW.drawImage(document.getElementById('texture_player1'), (saveData.usedcenter[1] + saveData.pos.x) * wholemappixelsize - wholemappixelsize - 1, (saveData.usedcenter[0] + saveData.pos.y) * wholemappixelsize - wholemappixelsize - 1, wholemappixelsize * 4, wholemappixelsize * 4);
 }
 
 
