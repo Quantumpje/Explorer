@@ -638,6 +638,33 @@ function cooldown(type, time) {
 }
 
 window.setInterval(function () {
+    if (pressedkeys.f && cooldowns['place'] == false) {
+        let x = 0;
+        let y = 0;
+
+        if (saveData.turning == 1) { y += -1; }
+        if (saveData.turning == 2) { x += -1; }
+        if (saveData.turning == 3) { y += 1; }
+        if (saveData.turning == 4) { x += 1; }
+
+        placeTile(x, y, saveData.selectedtile);
+        cooldown('place', 200);
+    }
+
+    if (pressedkeys.g && cooldowns['place'] == false) {
+        let x = 0;
+        let y = 0;
+
+        if (saveData.turning == 1) { y += -1; }
+        if (saveData.turning == 2) { x += -1; }
+        if (saveData.turning == 3) { y += 1; }
+        if (saveData.turning == 4) { x += 1; }
+
+        breakTile(x, y);
+        cooldown('place', 200);
+    }
+    
+    
     if (pressedkeys.w && !pressedkeys.s && !pressedkeys.a && !pressedkeys.d && cooldowns['move'] == false) {
         let tile = move(0, -1);
         let time = 400;
@@ -744,33 +771,6 @@ window.setInterval(function () {
     if (pressedkeys.e && cooldowns['rotate'] == false) {
         rotate(1);
         cooldown('rotate', 150);
-    }
-
-
-    if (pressedkeys.f && cooldowns['place'] == false) {
-        let x = 0;
-        let y = 0;
-
-        if (saveData.turning == 1) { y += -1; }
-        if (saveData.turning == 2) { x += -1; }
-        if (saveData.turning == 3) { y += 1; }
-        if (saveData.turning == 4) { x += 1; }
-
-        placeTile(x, y, saveData.selectedtile);
-        cooldown('place', 200);
-    }
-
-    if (pressedkeys.g && cooldowns['place'] == false) {
-        let x = 0;
-        let y = 0;
-
-        if (saveData.turning == 1) { y += -1; }
-        if (saveData.turning == 2) { x += -1; }
-        if (saveData.turning == 3) { y += 1; }
-        if (saveData.turning == 4) { x += 1; }
-
-        breakTile(x, y);
-        cooldown('place', 200);
     }
 }, 50);
 
