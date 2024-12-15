@@ -21,8 +21,10 @@
     <h2 id="pos_display"></h2>
     <p>WASD for movement, QE for rotating, F for place, G for break, 12 for browsing tiles, 34 for browsing recipes.</p>
 
-    <br><p>Be careful with the below buttons</p>
-    <br><button onclick="download()">Save to file</button>
+    <button onclick="updateDisplaySLOW()">Refresh World Map</button>
+
+    <br><br><p>Be careful with the below buttons</p>
+    <button onclick="download()">Save to file</button>
 
     <br><input id="savefile_load" type="file">
     <br><button onclick="upload()">Load save file</button>
@@ -44,6 +46,8 @@
     <img id="texture_6" src="assets/groundstone.png" width="0px" height="0px">
     <img id="texture_7" src="assets/tree.png" width="0px" height="0px">
     <img id="texture_8" src="assets/path.png" width="0px" height="0px">
+    <img id="texture_9" src="assets/glass.png" width="0px" height="0px">
+    <img id="texture_10" src="assets/smileium.png" width="0px" height="0px">
     
     <script src="RNG.js"></script>
     <script src="perlin.js"></script>

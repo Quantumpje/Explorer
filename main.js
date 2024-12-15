@@ -112,6 +112,26 @@ const tileData = {
         under: false,
         fluid: false,
     },
+    9: {
+        name: "glass",
+        placeable: true,
+        holdable: true,
+        breakable: true,
+        replaceable: false,
+        passable: false,
+        under: false,
+        fluid: false,
+    },
+    10: {
+        name: "smileium",
+        placeable: true,
+        holdable: true,
+        breakable: true,
+        replaceable: false,
+        passable: false,
+        under: false,
+        fluid: false,
+    },
 };
 
 const placeabletiles = [];
@@ -192,6 +212,38 @@ const recipeData = {
             {
                 amount: 5,
                 type: 8,
+            },
+        ],
+    },
+    4: {
+        id: 4,
+        name: "2x sand --> 1x glass",
+        inputs: [
+            {
+                amount: 1,
+                type: 2,
+            }
+        ],
+        outputs: [
+            {
+                amount: 1,
+                type: 9,
+            },
+        ],
+    },
+    5: {
+        id: 5,
+        name: "150x sand --> 1x smileium",
+        inputs: [
+            {
+                amount: 150,
+                type: 2,
+            }
+        ],
+        outputs: [
+            {
+                amount: 1,
+                type: 10,
             },
         ],
     },
@@ -597,7 +649,6 @@ function updateDisplaySLOW() {
     drawcanvasW();
 }
 window.setTimeout(updateDisplaySLOW, 50);
-window.setInterval(updateDisplaySLOW, 10000);
 
 
 const pressedkeys = {
