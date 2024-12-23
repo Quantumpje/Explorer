@@ -376,6 +376,17 @@ const centerinworlddata = saveData.usedcenter ? saveData.usedcenter : potentialc
 saveData.usedcenter = saveData.usedcenter ? saveData.usedcenter : potentialcenter;
 
 
+window.setInterval(function () {
+    for (let y in world) {
+        for (let x in world[y]) {
+            if (Number.isNaN(world[y][x].n)) {
+                world[y][x].n = 0;
+            }
+        }
+    }
+}, 1000);
+
+
 var saveGameLoop = window.setInterval(function () {
     localStorage.setItem("Explorer-Save", JSON.stringify(saveData));
 }, 2500);
@@ -443,7 +454,7 @@ function placeTile(xo, yo, type) {
         saveData.inventory[type] -= 1;
 
         tile = world[y][x].t = type;
-        world[y][x].n = false;
+        world[y][x].n = 0;
     }
 
     return tile;
@@ -714,8 +725,8 @@ window.setInterval(function () {
         breakTile(x, y);
         cooldown('place', 200);
     }
-    
-    
+
+
     if (pressedkeys.w && !pressedkeys.s && !pressedkeys.a && !pressedkeys.d && cooldowns['move'] == false) {
         let tile = move(0, -1);
         let time = 400;
