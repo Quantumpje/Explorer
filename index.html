@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Explorer</title>
+    <link rel="icon" href="assets/icon.png">
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div id="header">
+        <button onclick="openWindow('GameWindow')">Game Window</button>
+        <button onclick="openWindow('CraftingWindow')">Crafting Window</button>
+        <button onclick="openWindow('MapWindow')">Map Window</button>
+        <button onclick="openWindow('WorldManagementWindow')">World Management Window</button>
+        <button onclick="openWindow('SettingsWindow')">Settings Window</button>
+        <button onclick="openWindow('InfoWindow')">Info Window</button>
+        <p>v0.0.1 --- Game by Quantumpje --- WIP: Expect changes that will maybe make worlds soft-locked (e.g. an certain item inaccessable)!</p>
+    </div>
+
+    <div id="GameWindow" class="window">
+
+        <canvas id="GameCanvas"></canvas>
+
+        <div id="InventoryDiv">
+
+            <h3 id="CurrentSelectedItem"></h3>
+
+            <div id="InventoryButtons"></div>
+
+            <div id="EquippedItems"></div>
+
+        </div>
+
+    </div>
+
+    <div id="CraftingWindow" class="window">
+
+        <h2>Crafting Recipes</h2>
+
+        <div id="RecipeButtons"></div>
+
+    </div>
+
+    <div id="MapWindow" class="window">
+
+        <canvas id="MapCanvas"></canvas>
+
+    </div>
+
+    <div id="WorldManagementWindow" class="window">
+
+        <div id="CurrentWorldDiv">
+
+            <h2>Current World</h2>
+
+            <h4 id="NoWorldDisplay">No World</h4>
+
+            <h4 id="WorldNameDisplay">World Name:</h4>
+            <h4 id="WorldSeedDisplay">World Seed:</h4>
+            <h4 id="WorldTypeDisplay">World Type:</h4>
+
+            <h5 id="TimeDisplay"></h5>
+            <h6 id="OriginalVersionDisplay"></h6>
+
+        </div>
+
+        <div id="CreateNewWorldDiv">
+
+            <h2>Create a new world.</h2>
+
+            <input type="text" id="WorldNameInput" name="WorldNameInput" placeholder="World Name">
+            <input type="text" id="WorldSeedInput" name="WorldSeedInput" placeholder="World Seed">
+
+            <select name="WorldTypeInput" id="WorldTypeInput">
+                <option value="Classic">Classic</option>
+                <option value="Archipelago">Archipelago</option>
+                <option value="Smol">Smol</option>
+                <option value="UrMom">UrMom</option>
+                <option value="CheckerPatternTest">CheckerPatternTest</option>
+            </select>
+
+            <button onclick="createWorld()">Create New World</button>
+
+        </div>
+
+        <div id="DeleteWorldDiv">
+
+            <h2>Delete World</h2>
+            <p>Please back up your world to a json file<br>if you want to keep it after deleting here!</p>
+
+            <button onclick="deleteSave()">Delete World</button>
+
+        </div>
+
+        <div id="DownloadWorldDiv">
+
+            <div id="DownloadingDiv">
+                <button id="DownloadSaveButton" onclick="download()">Download World</button>
+            </div>
+
+            <div id="UploadingDiv">
+                <input id="SavefileLoader" type="file">
+                <button id="UploadSaveButton" onclick="upload()">Upload World</button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id="SettingsWindow" class="window">
+
+        <h1>WIP</h1>
+
+    </div>
+
+    <div id="InfoWindow" class="window">
+
+        <h2>Controlls:</h2>
+        <p>W A S D - move</p>
+        <p>G - Break</p>
+        <p>F - Place</p>
+        <p>1 2 - Scroll Inventory</p>
+        <p>Q E - Rotate</p>
+        <p>T - Equip</p> 
+
+    </div>
+
+
+    <div id="Images"></div>
+
+    <script src="rng/rng.js"></script>
+    <script src="rng/perlin.js"></script>
+
+    <script src="scripts/img_appender.js" type="module"></script>
+
+    <script src="main.js" type="module"></script>
+</body>
+
+</html>

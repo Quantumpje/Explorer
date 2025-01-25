@@ -1,0 +1,221 @@
+#GameCanvas {
+    width: 640px;
+    height: 640px;
+}
+
+#MapCanvas {
+    width: 1280px;
+    height: 1280px;
+}
+
+
+
+.window {
+    padding: 10px;
+    margin: 5px;
+    width: max-content;
+    background-color: darkgreen;
+    text-align: center;
+}
+
+
+
+#header {
+    padding: 10px;
+    margin: 10px;
+    background-color: green;
+    width: max-content;
+}
+
+#header button {
+    background-color: darkgreen;
+    color: lime;
+}
+
+#header button:hover {
+    opacity: 65%;
+}
+
+#header p {
+    display: inline;
+    padding: 2px;
+    margin: 2px;
+}
+
+
+
+#CurrentWorldDiv {
+    background-color: limegreen;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}
+
+#CurrentWorldDiv h2 {
+    padding: 2px;
+    margin: 5px;
+}
+
+#CurrentWorldDiv h4 {
+    padding: 2px;
+    margin: 5px;
+    color: darkslategray;
+}
+
+
+
+#DeleteWorldDiv {
+    background-color: limegreen;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}
+
+#DeleteWorldDiv h2 {
+    padding: 2px;
+    margin: 5px;
+}
+
+#DeleteWorldDiv button {
+    padding: 2px;
+    margin: 5px;
+    background-color: darkgreen;
+    color: lime;
+}
+
+
+
+#CreateNewWorldDiv {
+    background-color: limegreen;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}
+
+#CreateNewWorldDiv h2 {
+    padding: 2px;
+    margin: 5px;
+}
+
+#CreateNewWorldDiv input {
+    padding: 2px;
+    margin: 5px;
+    display: block;
+    width: 90%;
+}
+
+#CreateNewWorldDiv select {
+    padding: 2px;
+    margin: 5px;
+    display: block;
+    width: 92.5%;
+    background-color: darkgreen;
+    color: lime;
+}
+
+#CreateNewWorldDiv input {
+    padding: 2px;
+    margin: 5px;
+    background-color: darkgreen;
+}
+
+#CreateNewWorldDiv button {
+    padding: 2px;
+    margin: 5px;
+    background-color: darkgreen;
+    color: lime;
+}
+
+#CreateNewWorldDiv button:hover {
+    opacity: 65%;
+}
+
+
+
+#DownloadWorldDiv {
+    background-color: limegreen;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}
+
+#DownloadWorldDiv button {
+    padding: 2px;
+    margin: 10px;
+    background-color: darkgreen;
+    color: lime;
+    display: block;
+}
+
+#DownloadWorldDiv input {
+    padding: 2px;
+    margin: 10px;
+    background-color: darkgreen;
+    color: lime;
+    display: block;
+}
+
+
+
+#EquippedItems {
+    background-color: limegreen;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}
+
+#EquippedItems img {
+    margin: 2px;
+}
+
+
+
+#InventoryButtons {
+    background-color: limegreen;
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}
+
+#InventoryButtons button {
+    margin: 2px;
+}
+
+
+
+#CraftingWindow h2 {
+    padding: 2px;
+    margin: 5px;
+}
+
+
+
+#RecipeButtons {
+    padding: 5px;
+    margin: 5px;
+    text-align: center;
+}
+#RecipeButtons button {
+    padding: 3px;
+    margin: 3px;
+    text-align: center;
+    display: block;
+}
+
+
+
+#InfoWindow h1 {
+    padding: 2px;
+    margin: 5px;
+}
+
+#InfoWindow p {
+    padding: 0px;
+    margin: 0px;
+}
+
+
+
+body {
+    background-color: lightgreen;
+}

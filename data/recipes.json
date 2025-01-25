@@ -1,0 +1,125 @@
+{
+    "Woodcutting": {
+        "name": "Woodcutting",
+        "inputs": [
+            ["Tree", 1]
+        ],
+        "outputs": [
+            ["Wood Block", 2]
+        ]
+    },
+    "Seed Harvesting": {
+        "name": "Seed Harvesting",
+        "inputs": [
+            ["Tree", 1]
+        ],
+        "outputs": [
+            ["Sapling", 2]
+        ]
+    },
+    "Floor Making": {
+        "name": "Floor Making",
+        "inputs": [
+            ["Wood Block", 1]
+        ],
+        "outputs": [
+            ["Wood Floor", 2]
+        ]
+    },
+    "Pathing": {
+        "name": "Pathing",
+        "inputs": [
+            ["Grass", 5],
+            ["Sand", 1]
+        ],
+        "outputs": [
+            ["Path", 5]
+        ]
+    },
+    "Glassification": {
+        "name": "Glassification",
+        "inputs": [
+            ["Sand", 2]
+        ],
+        "outputs": [
+            ["Glass", 1]
+        ]
+    },
+    "Copper Smelting": {
+        "name": "Copper Smelting",
+        "inputs": [
+            ["Sand", 1],
+            ["Copper Ore", 2]
+        ],
+        "outputs": [
+            ["Copper Ingot", 2]
+        ]
+    },
+    "Iron Smelting": {
+        "name": "Iron Smelting",
+        "inputs": [
+            ["Stone", 1],
+            ["Iron Ore", 2]
+        ],
+        "outputs": [
+            ["Iron Ingot", 1]
+        ]
+    },
+    "Diamond Extraction": {
+        "name": "Diamond Extraction",
+        "inputs": [
+            ["Diamond Ore", 1],
+            ["Iron Ingot", 2]
+        ],
+        "outputs": [
+            ["Diamond", 1]
+        ]
+    },
+    "Copper Boots": {
+        "name": "Copper Boots",
+        "inputs": [
+            ["Copper Ingot", 6]
+        ],
+        "outputs": [
+            ["Copper Boots", 1]
+        ]
+    },
+    "Iron Boots": {
+        "name": "Iron Boots",
+        "inputs": [
+            ["Iron Ingot", 12]
+        ],
+        "outputs": [
+            ["Iron Boots", 1]
+        ]
+    },
+    "Diamond Boots": {
+        "name": "Diamond Boots",
+        "inputs": [
+            ["Diamond", 3]
+        ],
+        "outputs": [
+            ["Diamond Boots", 1]
+        ]
+    },
+    "Copper Pickaxe": {
+        "name": "Copper Pickaxe",
+        "inputs": [
+            ["Wood Block", 1],
+            ["Copper Ingot", 4]
+        ],
+        "outputs": [
+            ["Copper Pickaxe", 1]
+        ]
+    },
+    "Iron Pickaxe": {
+        "name": "Iron Pickaxe",
+        "inputs": [
+            ["Wood Block", 2],
+            ["Iron Ingot", 8]
+        ],
+        "outputs": [
+            ["Iron Pickaxe", 1]
+        ]
+    }
+}

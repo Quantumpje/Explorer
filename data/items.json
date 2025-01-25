@@ -1,0 +1,63 @@
+{
+    "Copper Ingot": {
+        "name":"Copper Ingot",
+        "texture": "copper_ingot.png",
+        "equippable": false,
+        "effects": []
+    },
+    "Iron Ingot": {
+        "name":"Iron Ingot",
+        "texture": "iron_ingot.png",
+        "equippable": false,
+        "effects": []
+    },
+    "Diamond": {
+        "name":"Diamond",
+        "texture": "diamond.png",
+        "equippable": false,
+        "effects": []
+    },
+    "Copper Boots": {
+        "name": "Copper Boots",
+        "texture": "copper_boots.png",
+        "equippable": true,
+        "equiptype": "Boots",
+        "effects": [
+            {"type": "Speed", "multiplier": 1.15}
+        ]
+    },
+    "Iron Boots": {
+        "name": "Iron Boots",
+        "texture": "iron_boots.png",
+        "equippable": true,
+        "equiptype": "Boots",
+        "effects": [
+            {"type": "Speed", "multiplier": 1.35}
+        ]
+    },
+    "Diamond Boots": {
+        "name": "Diamond Boots",
+        "texture": "diamond_boots.png",
+        "equippable": true,
+        "equiptype": "Boots",
+        "effects": [
+            {"type": "Speed", "multiplier": 1.65}
+        ]
+    },
+    "Copper Pickaxe": {
+        "name": "Copper Pickaxe",
+        "texture": "copper_pickaxe.png",
+        "equippable": true,
+        "equiptype": "Pickaxe",
+        "tier": 1,
+        "effects": []
+    },
+    "Iron Pickaxe": {
+        "name": "Iron Pickaxe",
+        "texture": "iron_pickaxe.png",
+        "equippable": true,
+        "equiptype": "Pickaxe",
+        "tier": 2,
+        "effects": []
+    }
+}

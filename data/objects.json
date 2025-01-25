@@ -1,0 +1,59 @@
+{
+    "Tree": {
+        "name": "Tree",
+        "texture": "tree.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true,
+            "placeable": true,
+            "placerestrict": true,
+            "placerestrictdata": {"type": "+", "tiles": ["Grass"]}
+        }
+    },
+    "Sapling": {
+        "name": "Sapling",
+        "texture": "sapling.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true,
+            "placeable": true,
+            "placerestrict": true,
+            "placerestrictdata": {"type": "+", "tiles": ["Grass"]},
+            "updatable": true
+        }
+    },
+    "Stone": {
+        "name": "Stone",
+        "texture": "stone.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true
+        }
+    },
+    "Copper Ore": {
+        "name": "Copper Ore",
+        "texture": "copper_ore.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true
+        }
+    },
+    "Iron Ore": {
+        "name": "Iron Ore",
+        "texture": "iron_ore.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true,
+            "minimumtier": 1
+        }
+    },
+    "Diamond Ore": {
+        "name": "Diamond Ore",
+        "texture": "diamond_ore.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true,
+            "minimumtier": 2
+        }
+    }
+}

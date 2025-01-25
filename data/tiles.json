@@ -1,0 +1,104 @@
+{
+    "Grass": {
+        "name": "Grass",
+        "texture": "grass.png",
+        "data_tags": {
+            "walkable": true,
+            "walkcooldown": 400,
+            "breakable": true,
+            "holdable": true,
+            "placeable": true,
+            "replaceable": true
+        }
+    },
+    "Sand": {
+        "name": "Sand",
+        "texture": "sand.png",
+        "data_tags": {
+            "walkable": true,
+            "walkcooldown": 400,
+            "breakable": true,
+            "holdable": true,
+            "placeable": true,
+            "replaceable": true
+        }
+    },
+    "Water": {
+        "name": "Water",
+        "texture": "water.png",
+        "data_tags": {
+            "walkable": true,
+            "walkcooldown": 1250,
+            "fluid": true,
+            "movingvariant": "Moving Water",
+            "replaceable": true
+        }
+    },
+    "Wood Block": {
+        "name": "Wood Block",
+        "texture": "wood_block.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true,
+            "placeable": true
+        }
+    },
+    "Wood Floor": {
+        "name": "Wood Floor",
+        "texture": "wood_floor.png",
+        "data_tags": {
+            "walkable": true,
+            "walkcooldown": 400,
+            "breakable": true,
+            "holdable": true,
+            "placeable": true
+        }
+    },
+    "Path": {
+        "name": "Path",
+        "texture": "path.png",
+        "data_tags": {
+            "walkable": true,
+            "walkcooldown": 250,
+            "breakable": true,
+            "holdable": true,
+            "placeable": true,
+            "replaceable": true
+        }
+    },
+    "Glass": {
+        "name": "Glass",
+        "texture": "glass.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true,
+            "placeable": true
+        }
+    },
+    "Moving Water": {
+        "name": "Moving Water",
+        "texture": "water.png",
+        "data_tags": {
+            "walkable": true,
+            "walkcooldown": 1250,
+            "ismovingfluid": true,
+            "stillvariant": "Water",
+            "updatable": true
+        }
+    },
+    "Ground Stone": {
+        "name": "Ground Stone",
+        "texture": "ground_stone.png",
+        "data_tags": {
+            "walkable": true,
+            "walkcooldown": 400,
+            "updatable": true,
+            "replaceable": true
+        }
+    },
+    "None": {
+        "name": "None",
+        "texture": "barrier.png",
+        "data_tags": {}
+    }
+}
