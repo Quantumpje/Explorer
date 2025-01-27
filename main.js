@@ -27,8 +27,8 @@ const DefaultData = {
         updatable_tiles: [],
     },
 
-    originalversion: "v0.0.1",
-    version: "v0.0.1",
+    originalversion: "v0.0.2",
+    version: "v0.0.2",
 };
 
 //#endregion
@@ -70,14 +70,6 @@ function remove_updatable_tile(x, y) {
 
     return undefined;
 }
-
-//#endregion
-
-
-
-//#region COMPRESSION
-
-
 
 //#endregion
 
@@ -241,7 +233,11 @@ function checkVersioning(data) {
 
     if (data?.version && data?.version != DefaultData?.version) {
 
-        // Version converters
+        if (data?.version == "v0.0.1") {
+            data.version = "v0.0.2";
+        }
+
+        return data;
 
     } else if (data?.version && data?.version == DefaultData?.version) {
         return data;
@@ -869,8 +865,8 @@ function updateTile(v, t) {
         }
     }
 
-    if (object?.type == "Sapling" && t % 20 === 0) {
-        if (Math.random() < 0.015) {
+    if (object?.type == "Sapling" && t % 1800 === 0) {
+        if (Math.random() < 0.2) {
             Data.world.rows[y + halfsize][x + halfsize].object = { type: "Tree" };
 
             drawGameCanvas();
@@ -932,7 +928,20 @@ function place(xo, yo) {
 
     let placed = false;
     if (DATA_tiles?.[typetoplace] && type != "None") {
-        if (DATA_tiles?.[type]?.data_tags?.replaceable && DATA_tiles?.[typetoplace]?.data_tags?.placeable && Data?.player?.inventory?.[typetoplace] > 0) {
+        let notplacerestricted = false;
+        if (DATA_objects?.[objecttype]?.data_tags?.placerestrict) {
+            if (DATA_objects?.[objecttype]?.data_tags?.placerestrictdata?.type == "+") {
+                if (DATA_objects?.[objecttype]?.data_tags?.placerestrictdata?.tiles.includes(typetoplace)) { notplacerestricted = true; }
+            }
+            else if (DATA_objects?.[objecttype]?.data_tags?.placerestrictdata?.type == "-") {
+                if (!DATA_objects?.[objecttype]?.data_tags?.placerestrictdata?.tiles.includes(typetoplace)) { notplacerestricted = true; }
+            }
+        }
+        else {
+            notplacerestricted = true;
+        }
+
+        if (DATA_tiles?.[type]?.data_tags?.replaceable && DATA_tiles?.[typetoplace]?.data_tags?.placeable && Data?.player?.inventory?.[typetoplace] > 0 && notplacerestricted) {
             if (DATA_tiles?.[type]?.data_tags?.holdable) {
                 if (!Data?.player?.inventory?.[type]) { Data.player.inventory[type] = 0; };
                 Data.player.inventory[type] += 1;
@@ -1270,7 +1279,7 @@ function addInventoryKeys() {
 
 //#region GAME LOOP
 
-window.setTimeout(loading, 25);
+window.setTimeout(loading, 50);
 
 function start() {
     var t = 0;
