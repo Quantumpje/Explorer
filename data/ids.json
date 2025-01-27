@@ -13,6 +13,7 @@
     "Copper Ore": 11,
     "Iron Ore": 12,
     "Diamond Ore": 13,
+    "Sapling": 14,
 
     "0": "Water",
     "1": "Grass",
@@ -27,5 +28,6 @@
     "10": "Stone",
     "11": "Copper Ore",
     "12": "Iron Ore",
-    "13": "Diamond Ore"
+    "13": "Diamond Ore",
+    "14": "Sapling"
 }
