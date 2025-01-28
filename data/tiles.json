@@ -43,9 +43,38 @@
             "placeable": true
         }
     },
+    "Wood Planks": {
+        "name": "Wood Planks",
+        "texture": "wood_planks.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true,
+            "placeable": true
+        }
+    },
     "Wood Floor": {
         "name": "Wood Floor",
         "texture": "wood_floor.png",
+        "data_tags": {
+            "walkable": true,
+            "walkcooldown": 400,
+            "breakable": true,
+            "holdable": true,
+            "placeable": true
+        }
+    },
+    "Stone Block": {
+        "name": "Stone Block",
+        "texture": "stone_block.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true,
+            "placeable": true
+        }
+    },
+    "Stone Floor": {
+        "name": "Stone Floor",
+        "texture": "stone_floor.png",
         "data_tags": {
             "walkable": true,
             "walkcooldown": 400,

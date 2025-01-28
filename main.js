@@ -7,6 +7,9 @@ import DATA_items from "./data/items.json" with { type: "json" };
 import DATA_ids from "./data/ids.json" with { type: "json" };
 
 
+const Testing = false;
+
+
 const DefaultData = {
     player: {
         pos: [0, 0],
@@ -22,13 +25,14 @@ const DefaultData = {
             type: null,
             spawn: [0, 0],
             time: 0,
+            creation_date: null,
         },
         rows: [],
         updatable_tiles: [],
     },
 
-    originalversion: "v0.0.2",
-    version: "v0.0.2",
+    originalversion: "v0.0.3",
+    version: "v0.0.3",
 };
 
 //#endregion
@@ -237,6 +241,11 @@ function checkVersioning(data) {
             data.version = "v0.0.2";
         }
 
+        if (data?.version == "v0.0.2") {
+            data.version = "v0.0.3";
+            data.world.meta.creation_date = "[Before creation date was added]";
+        }
+
         return data;
 
     } else if (data?.version && data?.version == DefaultData?.version) {
@@ -428,19 +437,15 @@ function terrain_CheckerPatternTest(x, y, seed) {
 
     let R = [rng()];
 
-    let tiletype = "Grass";
+    let tiletype = "Stone Floor";
     if ((y % 2 === 0 && x % 2 !== 0) || (y % 2 !== 0 && x % 2 === 0)) {
-        tiletype = "Sand";
+        tiletype = "Stone Block";
+    }
+    if (x == 0 && y == 0) {
+        tiletype = "Grass";
     }
 
-    let objecttype = null;
-    let object = null;
-    if (tiletype == "Grass" && !(x == 0 && y == 0) && R[0] < 0.5) {
-        objecttype = "Tree";
-        object = { type: objecttype };
-    }
-
-    return { type: tiletype, object: object };
+    return { type: tiletype, object: null };
 }
 
 function generateWorld(seed, type, name) {
@@ -500,10 +505,12 @@ function generateWorld(seed, type, name) {
     Data.world.meta.type = type;
     Data.world.meta.seed = seed;
     Data.world.meta.name = name;
+    let date = new Date();
+    Data.world.meta.creation_date = date.toUTCString();
 
     let halfsize = type_to_halfsize();
-    let spawn = [0, 0];
     let rng = new_rng(seed);
+    let spawn = [Math.floor((rng() - 0.5) * halfsize * 2), Math.floor((rng() - 0.5) * halfsize * 2)];
 
     while (Data?.world?.rows?.[spawn[1] + halfsize]?.[spawn[0] + halfsize]?.type != "Grass") {
         spawn = [Math.floor((rng() - 0.5) * halfsize * 2), Math.floor((rng() - 0.5) * halfsize * 2)];
@@ -519,6 +526,11 @@ function generateWorld(seed, type, name) {
 
 //#region PAGE MANAGEMENT
 
+function hideTestOpt() {
+    if (Testing == false) { document.getElementById("SizeTestOpt").hidden = true; }
+}; window.setTimeout(hideTestOpt, 50);
+
+
 function openWindow(id) {
     let windows = ["GameWindow", "CraftingWindow", "MapWindow", "WorldManagementWindow", "SettingsWindow", "InfoWindow"];
 
@@ -530,7 +542,13 @@ function openWindow(id) {
 }
 
 function updateCurrentWorldDisplay() {
-    let displays = [["WorldNameDisplay", `World Name: ${Data?.world?.meta?.name}`], ["WorldSeedDisplay", `World Seed: ${Data?.world?.meta?.seed}`], ["WorldTypeDisplay", `World Type: ${Data?.world?.meta?.type}`]];
+    let displays = [
+        ["WorldNameDisplay", `World Name: ${Data?.world?.meta?.name}`],
+        ["WorldSeedDisplay", `World Seed: ${Data?.world?.meta?.seed}`],
+        ["WorldTypeDisplay", `World Type: ${Data?.world?.meta?.type}`],
+        ["WorldCreationDateDisplay", `World was made at ${Data?.world?.meta?.creation_date}`],
+        ["OriginalVersionDisplay", `World was made in version ${Data?.originalversion}`],
+    ];
 
     if (Data) {
         document.getElementById("NoWorldDisplay").hidden = true;
@@ -699,10 +717,6 @@ function removeEquippedImage(name) {
 
 function updateTimeDisplay() {
     document.getElementById("TimeDisplay").innerHTML = `Time in world: ${Math.floor(Data?.world?.meta?.time / 2) / 10}s`;
-}
-
-function updateOriginalVersionDisplay() {
-    document.getElementById("OriginalVersionDisplay").innerHTML = `World was made in version ${Data?.originalversion}`;
 }
 
 //#endregion
@@ -1140,7 +1154,7 @@ function onKEY() {
         if (Data?.player?.facing == "W") { x += -1; }
 
         place(x, y);
-        cooldown('place', 200);
+        cooldown('place', 100);
     }
 
     if (pressedkeys.g && cooldowns['place'] == false) {
@@ -1153,7 +1167,7 @@ function onKEY() {
         if (Data?.player?.facing == "W") { x += -1; }
 
         mine(x, y);
-        cooldown('place', 200);
+        cooldown('place', 100);
     }
 
 
@@ -1311,8 +1325,6 @@ function start() {
         if (t % 5 === 0) { updateCreateNewWorldDisplay(); }
 
         if (t % 5 === 0) { updateTimeDisplay(); }
-
-        if (t % 5 === 0) { updateOriginalVersionDisplay(); }
 
 
         for (let v of Data?.world?.updatable_tiles) { updateTile(v, t); }

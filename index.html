@@ -19,7 +19,7 @@
         <button onclick="openWindow('WorldManagementWindow')">World Management Window</button>
         <button onclick="openWindow('SettingsWindow')">Settings Window</button>
         <button onclick="openWindow('InfoWindow')">Info Window</button>
-        <p>v0.0.2 --- Game by Quantumpje --- WIP: Expect changes that will maybe make worlds soft-locked (e.g. an certain item inaccessable)!</p>
+        <p>v0.0.3 --- Game by Quantumpje --- WIP: Expect changes that will maybe make worlds soft-locked (e.g. an certain item inaccessable)!</p>
     </div>
 
     <div id="GameWindow" class="window">
@@ -66,6 +66,7 @@
 
             <h5 id="TimeDisplay"></h5>
             <h6 id="OriginalVersionDisplay"></h6>
+            <h6 id="WorldCreationDateDisplay">World Creation Date:</h6>
 
         </div>
 
@@ -81,7 +82,7 @@
                 <option value="Archipelago">Archipelago</option>
                 <option value="Smol">Smol</option>
                 <option value="UrMom">UrMom</option>
-                <option value="CheckerPatternTest">CheckerPatternTest</option>
+                <option id="SizeTestOpt" value="CheckerPatternTest">CheckerPatternTest</option>
             </select>
 
             <button onclick="createWorld()">Create New World</button>

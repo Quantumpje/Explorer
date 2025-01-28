@@ -21,9 +21,12 @@
     "player_W.png",
     "sand.png",
     "sapling.png",
+    "stone_block.png",
+    "stone_floor.png",
     "stone.png",
     "tree.png",
     "water.png",
     "wood_block.png",
-    "wood_floor.png"
+    "wood_floor.png",
+    "wood_planks.png"
 ]

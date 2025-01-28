@@ -17,13 +17,40 @@
             ["Sapling", 2]
         ]
     },
-    "Floor Making": {
-        "name": "Floor Making",
+    "Plank Making": {
+        "name": "Plank Making",
         "inputs": [
             ["Wood Block", 1]
         ],
         "outputs": [
+            ["Wood Planks", 1]
+        ]
+    },
+    "Floor Making": {
+        "name": "Floor Making",
+        "inputs": [
+            ["Wood Planks", 1]
+        ],
+        "outputs": [
             ["Wood Floor", 2]
+        ]
+    },
+    "Stonecutting": {
+        "name": "Stonecutting",
+        "inputs": [
+            ["Stone", 1]
+        ],
+        "outputs": [
+            ["Stone Block", 2]
+        ]
+    },
+    "Stone Floor Making": {
+        "name": "Stone Floor Making",
+        "inputs": [
+            ["Stone", 1]
+        ],
+        "outputs": [
+            ["Stone Floor", 2]
         ]
     },
     "Pathing": {

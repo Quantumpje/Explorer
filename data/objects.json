@@ -27,7 +27,8 @@
         "texture": "stone.png",
         "data_tags": {
             "breakable": true,
-            "holdable": true
+            "holdable": true,
+            "placeable": true
         }
     },
     "Copper Ore": {
@@ -35,7 +36,8 @@
         "texture": "copper_ore.png",
         "data_tags": {
             "breakable": true,
-            "holdable": true
+            "holdable": true,
+            "placeable": true
         }
     },
     "Iron Ore": {
@@ -44,6 +46,7 @@
         "data_tags": {
             "breakable": true,
             "holdable": true,
+            "placeable": true,
             "minimumtier": 1
         }
     },
@@ -53,6 +56,7 @@
         "data_tags": {
             "breakable": true,
             "holdable": true,
+            "placeable": true,
             "minimumtier": 2
         }
     }
