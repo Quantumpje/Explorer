@@ -2,6 +2,7 @@
 
 import DATA_tiles from "./data/tiles.json" with { type: "json" };
 import DATA_objects from "./data/objects.json" with { type: "json" };
+import DATA_roofs from "./data/roofs.json" with { type: "json" };
 import DATA_recipes from "./data/recipes.json" with { type: "json" };
 import DATA_items from "./data/items.json" with { type: "json" };
 import DATA_ids from "./data/ids.json" with { type: "json" };
@@ -31,8 +32,8 @@ const DefaultData = {
         updatable_tiles: [],
     },
 
-    originalversion: "v0.0.3",
-    version: "v0.0.3",
+    originalversion: "v0.0.4",
+    version: "v0.0.4",
 };
 
 //#endregion
@@ -61,6 +62,11 @@ function type_to_halfsize() {
 
 
 function add_updatable_tile(x, y) {
+    let array = Data?.world?.updatable_tiles;
+    let index = array?.findIndex(function (v) { return v[0] == x && v[1] == y; });
+    if (array[index]) {
+        return array[index];
+    }
     return Data?.world?.updatable_tiles?.push([x, y]);
 }
 
@@ -179,7 +185,7 @@ function compressWorld(world) {
         let count = 0;
 
         row.forEach(block => {
-            const blockStr = `${DATA_ids?.[block.type]},${DATA_ids?.[block.object?.type] || -1}`;
+            const blockStr = `${DATA_ids?.[block.type]},${DATA_ids?.[block.object?.type] || -1},${DATA_ids?.[block.roof?.type] || -1}`;
             if (blockStr === current) {
                 count++;
             } else {
@@ -199,10 +205,11 @@ function decompressWorld(compressedWorld) {
     return compressedWorld.map(compressedRow => {
         return compressedRow.split("|").flatMap(chunk => {
             const [data, count] = chunk.split("x");
-            const [type, objecttype] = data.split(",").map(String);
+            const [type, objecttype, rooftype] = data.split(",").map(String);
             return Array(Number(count)).fill().map(() => ({
                 type: DATA_ids?.[type],
-                object: { type: objecttype == -1 ? null : DATA_ids?.[objecttype] }
+                object: { type: objecttype == -1 ? null : DATA_ids?.[objecttype] },
+                roof: { type: rooftype == -1 ? null : DATA_ids?.[rooftype] }
             }));
         });
     });
@@ -244,6 +251,10 @@ function checkVersioning(data) {
         if (data?.version == "v0.0.2") {
             data.version = "v0.0.3";
             data.world.meta.creation_date = "[Before creation date was added]";
+        }
+
+        if (data?.version == "v0.0.3") {
+            data.version = "v0.0.4"
         }
 
         return data;
@@ -333,7 +344,7 @@ function terrain_Classic(x, y, seed) {
         object = { type: objecttype };
     }
 
-    return { type: tiletype, object: object };
+    return { type: tiletype, object: object, roof: null };
 }
 
 function terrain_Archipelago(x, y, seed) {
@@ -381,7 +392,7 @@ function terrain_Archipelago(x, y, seed) {
         object = { type: objecttype };
     }
 
-    return { type: tiletype, object: object };
+    return { type: tiletype, object: object, roof: null };
 }
 
 function terrain_Smol(x, y, seed) {
@@ -429,7 +440,7 @@ function terrain_Smol(x, y, seed) {
         object = { type: objecttype };
     }
 
-    return { type: tiletype, object: object };
+    return { type: tiletype, object: object, roof: null };
 }
 
 function terrain_CheckerPatternTest(x, y, seed) {
@@ -445,7 +456,7 @@ function terrain_CheckerPatternTest(x, y, seed) {
         tiletype = "Grass";
     }
 
-    return { type: tiletype, object: null };
+    return { type: tiletype, object: null, roof: null };
 }
 
 function generateWorld(seed, type, name) {
@@ -618,6 +629,18 @@ function setupInventoryButtons() {
             inv_buttons_list.push(object?.name);
         }
     }
+    for (let roof of Object.values(DATA_roofs)) {
+        if (roof?.data_tags?.holdable) {
+            let button = document.createElement("button");
+            button.style.background = `url(assets/${roof?.texture})`;
+            button.id = `InvButton_${roof?.name}`;
+            button.name = roof?.name;
+            button.onclick = selectItem;
+            document.getElementById("InventoryButtons").appendChild(button);
+
+            inv_buttons_list.push(roof?.name);
+        }
+    }
     for (let item of Object.values(DATA_items)) {
         let button = document.createElement("button");
         button.style.background = `url(assets/${item?.texture})`;
@@ -735,10 +758,63 @@ function drawGameCanvasPlayer() {
     if (Data?.player?.facing == "W") { GameCanvasCTX.drawImage(document.getElementById("player_W.png"), GameCanvas.width / 2 - 12, GameCanvas.height / 2 - 12, 24, 24); }
 }
 
-function updateGameCanvas(x, y, p) {
+function transparentRoof(x, y) {
+    let halfsize = type_to_halfsize();
+
+    let oldConnectedRoofs = [];
+    let connectedRoofs = [];
+    if (Data?.world?.rows?.[y + halfsize + Data?.player?.pos?.[1]]?.[x + halfsize + Data?.player?.pos?.[0]]?.roof?.type) {
+        connectedRoofs.push([x, y]);
+    }
+    let newConnectedRoofs = [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]];
+    let usedConnectedRoofs = [[x - 1, y], [x + 1, y], [x, y - 1], [x, y + 1]];
+
+    while (connectedRoofs.length > 0) {
+        connectedRoofs = [];
+
+        for (let v of newConnectedRoofs) {
+            let maybeRoof = Data?.world?.rows?.[v[1] + halfsize + Data?.player?.pos?.[1]]?.[v[0] + halfsize + Data?.player?.pos?.[0]]?.roof;
+            if (maybeRoof?.type) {
+                connectedRoofs.push(v);
+            }
+        }
+
+        newConnectedRoofs = [];
+
+        for (let v of connectedRoofs) {
+            if (!usedConnectedRoofs.find(function (value) { return value[0] == v[0] - 1 && value[1] == v[1]; })) {
+                newConnectedRoofs.push([v[0] - 1, v[1]]);
+                usedConnectedRoofs.push([v[0] - 1, v[1]]);
+            }
+            if (!usedConnectedRoofs.find(function (value) { return value[0] == v[0] + 1 && value[1] == v[1]; })) {
+                newConnectedRoofs.push([v[0] + 1, v[1]]);
+                usedConnectedRoofs.push([v[0] + 1, v[1]]);
+            }
+            if (!usedConnectedRoofs.find(function (value) { return value[0] == v[0] && value[1] == v[1] - 1; })) {
+                newConnectedRoofs.push([v[0], v[1] - 1]);
+                usedConnectedRoofs.push([v[0], v[1] - 1]);
+            }
+            if (!usedConnectedRoofs.find(function (value) { return value[0] == v[0] && value[1] == v[1] + 1; })) {
+                newConnectedRoofs.push([v[0], v[1] + 1]);
+                usedConnectedRoofs.push([v[0], v[1] + 1]);
+            }
+            oldConnectedRoofs.push([v[0], v[1]]);
+        }
+    }
+
+    if (oldConnectedRoofs.length == 0 && Data?.world?.rows?.[y + halfsize + Data?.player?.pos?.[1]]?.[x + halfsize + Data?.player?.pos?.[0]]?.roof?.type) {
+        oldConnectedRoofs.push([0, 0]);
+    }
+
+    return oldConnectedRoofs;
+}
+
+function updateGameCanvas(x, y, transparent) {
     let halfsize = type_to_halfsize();
 
     let type = Data?.world?.rows?.[y + halfsize + Data?.player?.pos?.[1]]?.[x + halfsize + Data?.player?.pos?.[0]]?.type || "None";
+
+    GameCanvasCTX.globalAlpha = 1;
 
     GameCanvasCTX.drawImage(document.getElementById(DATA_tiles?.[type]?.texture), (x + 8) * 32, (y + 8) * 32, 32, 32);
 
@@ -748,17 +824,33 @@ function updateGameCanvas(x, y, p) {
         GameCanvasCTX.drawImage(document.getElementById(DATA_objects?.[objecttype]?.texture), (x + 8) * 32 + 4, (y + 8) * 32 + 4, 24, 24);
     }
 
-    if (p) { drawGameCanvasPlayer(); }
+    if (x == 0 && y == 0) { drawGameCanvasPlayer(); }
+
+    let rooftype = Data?.world?.rows?.[y + halfsize + Data?.player?.pos?.[1]]?.[x + halfsize + Data?.player?.pos?.[0]]?.roof?.type || null;
+
+    if (transparent) {
+        GameCanvasCTX.globalAlpha = 0.65;
+    }
+    else {
+        GameCanvasCTX.globalAlpha = 1;
+    }
+
+    if (rooftype) {
+        GameCanvasCTX.drawImage(document.getElementById(DATA_roofs?.[rooftype]?.texture), (x + 8) * 32, (y + 8) * 32, 32, 32);
+    }
 }
 
 function drawGameCanvas() {
+    let transparentRoofs = transparentRoof(0, 0);
+
     for (let x = -8; x <= 8; x++) {
         for (let y = -8; y <= 8; y++) {
-            updateGameCanvas(x, y, false);
+            let transparent = false;
+            if (transparentRoofs.find(function (value) { return value[0] == x && value[1] == y; })) { transparent = true; }
+
+            updateGameCanvas(x, y, transparent);
         }
     }
-
-    drawGameCanvasPlayer();
 }
 
 
@@ -776,6 +868,12 @@ function updateMapCanvas(x, y) {
 
     if (objecttype) {
         MapCanvasCTX.drawImage(document.getElementById(DATA_objects?.[objecttype]?.texture), (x + halfsize) * 8 + 1, (y + halfsize) * 8 + 1, 6, 6);
+    }
+
+    let rooftype = Data?.world?.rows?.[y + halfsize]?.[x + halfsize]?.roof?.type || null;
+
+    if (rooftype) {
+        MapCanvasCTX.drawImage(document.getElementById(DATA_roofs?.[rooftype]?.texture), (x + halfsize) * 8, (y + halfsize) * 8, 8, 8);
     }
 }
 
@@ -862,6 +960,7 @@ function updateTile(v, t) {
 
     let tile = Data?.world?.rows?.[y + halfsize]?.[x + halfsize];
     let object = Data?.world?.rows?.[y + halfsize]?.[x + halfsize]?.object;
+    let roof = Data?.world?.rows?.[y + halfsize]?.[x + halfsize]?.roof;
 
     if (tile?.type == "Ground Stone" && t % 20 === 0) {
         let sides = [[0, 1], [0, -1], [1, 0], [-1, 0]];
@@ -925,6 +1024,13 @@ function rotate(r) {
 
     drawGameCanvasPlayer();
 
+    let transparentRoofs = transparentRoof(0, 0);
+
+    let transparent = false;
+    if (transparentRoofs.find(function (value) { return value[0] == 0 && value[1] == 0; })) { transparent = true; }
+
+    drawGameCanvas(0, 0);
+
     return [];
 }
 
@@ -937,10 +1043,12 @@ function place(xo, yo) {
 
     let type = Data?.world?.rows?.[y]?.[x]?.type || "None";
     let objecttype = Data?.world?.rows?.[y]?.[x]?.object?.type || null;
+    let rooftype = Data?.world?.rows?.[y]?.[x]?.roof?.type || null;
 
     let typetoplace = Data?.player?.selected_item;
 
     let placed = false;
+
     if (DATA_tiles?.[typetoplace] && type != "None") {
         let notplacerestricted = false;
         if (DATA_objects?.[objecttype]?.data_tags?.placerestrict) {
@@ -972,7 +1080,12 @@ function place(xo, yo) {
                 remove_updatable_tile(x - halfsize, y - halfsize);
             }
 
-            updateGameCanvas(xo, yo, true);
+            let transparentRoofs = transparentRoof(0, 0);
+
+            let transparent = false;
+            if (transparentRoofs.find(function (value) { return value[0] == xo && value[1] == yo; })) { transparent = true; }
+
+            updateGameCanvas(xo, yo, transparent);
             updateMapCanvas(x - halfsize, y - halfsize);
 
             placed = true;
@@ -1010,7 +1123,45 @@ function place(xo, yo) {
                 add_updatable_tile(x - halfsize, y - halfsize);
             }
 
-            updateGameCanvas(xo, yo, true);
+            let transparentRoofs = transparentRoof(0, 0);
+
+            let transparent = false;
+            if (transparentRoofs.find(function (value) { return value[0] == xo && value[1] == yo; })) { transparent = true; }
+
+            updateGameCanvas(xo, yo, transparent);
+            updateMapCanvas(x - halfsize, y - halfsize);
+
+            placed = true;
+        }
+    }
+    else if (DATA_roofs?.[typetoplace] && type != "None") {
+        if ((DATA_roofs?.[rooftype]?.data_tags?.replaceable || objecttype == null) && DATA_roofs?.[typetoplace]?.data_tags?.placeable && Data?.player?.inventory?.[typetoplace] > 0) {
+            if (DATA_roofs?.[rooftype]?.data_tags?.holdable) {
+                if (!Data?.player?.inventory?.[rooftype]) { Data.player.inventory[rooftype] = 0; };
+                Data.player.inventory[rooftype] += 1;
+            }
+
+            Data.player.inventory[typetoplace] -= 1;
+
+            if (!Data?.world?.rows?.[y]?.[x]?.roof) {
+                Data.world.rows[y][x].roof = { type: null };
+            }
+
+            Data.world.rows[y][x].roof.type = typetoplace;
+
+            if (DATA_roofs?.[typetoplace]?.data_tags?.updatable) {
+                add_updatable_tile(x - halfsize, y - halfsize);
+            }
+            else if (!DATA_tiles?.[type]?.data_tags?.updatable) {
+                remove_updatable_tile(x - halfsize, y - halfsize);
+            }
+
+            let transparentRoofs = transparentRoof(0, 0);
+
+            let transparent = false;
+            if (transparentRoofs.find(function (value) { return value[0] == xo && value[1] == yo; })) { transparent = true; }
+
+            updateGameCanvas(xo, yo, transparent);
             updateMapCanvas(x - halfsize, y - halfsize);
 
             placed = true;
@@ -1028,9 +1179,35 @@ function mine(xo, yo) {
 
     let type = Data?.world?.rows?.[y]?.[x]?.type || "None";
     let objecttype = Data?.world?.rows?.[y]?.[x]?.object?.type || null;
+    let rooftype = Data?.world?.rows?.[y]?.[x]?.roof?.type || null;
 
     let mined = false;
-    if (objecttype) {
+
+    if (rooftype) {
+        if (DATA_roofs?.[rooftype]?.data_tags?.breakable) {
+            if (DATA_roofs?.[rooftype]?.data_tags?.holdable) {
+                if (!Data?.player?.inventory?.[rooftype]) { Data.player.inventory[rooftype] = 0; };
+                Data.player.inventory[rooftype] += 1;
+            }
+
+            Data.world.rows[y][x].roof = null;
+
+            if (DATA_roofs?.[rooftype]?.data_tags?.updatable && !DATA_objects?.[objecttype]?.data_tags?.updatable && !DATA_tiles?.[type]?.data_tags?.updatable) {
+                remove_updatable_tile(x - halfsize, y - halfsize);
+            }
+
+            let transparentRoofs = transparentRoof(0, 0);
+
+            let transparent = false;
+            if (transparentRoofs.find(function (value) { return value[0] == xo && value[1] == yo; })) { transparent = true; }
+
+            updateGameCanvas(xo, yo, transparent);
+            updateMapCanvas(x - halfsize, y - halfsize);
+
+            mined = true;
+        }
+    }
+    else if (objecttype) {
         let tierallowed = false;
         let equippedtier = DATA_items?.[Data?.player?.equipped?.Pickaxe]?.tier || 0;
         if (DATA_objects?.[objecttype]?.data_tags?.minimumtier) {
@@ -1053,7 +1230,12 @@ function mine(xo, yo) {
                 remove_updatable_tile(x - halfsize, y - halfsize);
             }
 
-            updateGameCanvas(xo, yo, true);
+            let transparentRoofs = transparentRoof(0, 0);
+
+            let transparent = false;
+            if (transparentRoofs.find(function (value) { return value[0] == xo && value[1] == yo; })) { transparent = true; }
+
+            updateGameCanvas(xo, yo, transparent);
             updateMapCanvas(x - halfsize, y - halfsize);
 
             mined = true;
@@ -1071,7 +1253,12 @@ function mine(xo, yo) {
             add_updatable_tile(x - halfsize, y - halfsize);
         }
 
-        updateGameCanvas(xo, yo, true);
+        let transparentRoofs = transparentRoof(0, 0);
+
+        let transparent = false;
+        if (transparentRoofs.find(function (value) { return value[0] == xo && value[1] == yo; })) { transparent = true; }
+
+        updateGameCanvas(xo, yo, transparent);
         updateMapCanvas(x - halfsize, y - halfsize);
 
         mined = true;
@@ -1267,7 +1454,7 @@ function onKEY() {
 
 function addInventoryKeys() {
     return document.addEventListener('keydown', function (event) {
-        if (!(DATA_tiles?.[Data?.player?.selected_item] || DATA_objects?.[Data?.player?.selected_item] || DATA_items?.[Data?.player?.selected_item])) {
+        if (!(DATA_tiles?.[Data?.player?.selected_item] || DATA_objects?.[Data?.player?.selected_item] || DATA_items?.[Data?.player?.selected_item] || DATA_roofs?.[Data?.player?.selected_item])) {
             Data.player.selected_item = "Grass";
         }
 
@@ -1293,7 +1480,7 @@ function addInventoryKeys() {
 
 //#region GAME LOOP
 
-window.setTimeout(loading, 50);
+window.onload = loading;
 
 function start() {
     var t = 0;

@@ -1,0 +1,12 @@
+{
+    "Wooden Roof": {
+        "name": "Wooden Roof",
+        "texture": "wooden_roof.png",
+        "data_tags": {
+            "breakable": true,
+            "holdable": true,
+            "placeable": true,
+            "replaceable": true
+        }
+    }
+}

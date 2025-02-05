@@ -35,6 +35,15 @@
             ["Wood Floor", 2]
         ]
     },
+    "Roof Making": {
+        "name": "Roof Making",
+        "inputs": [
+            ["Wood Planks", 1]
+        ],
+        "outputs": [
+            ["Wooden Roof", 2]
+        ]
+    },
     "Stonecutting": {
         "name": "Stonecutting",
         "inputs": [
