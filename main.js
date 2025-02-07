@@ -32,8 +32,8 @@ const DefaultData = {
         updatable_tiles: [],
     },
 
-    originalversion: "v0.0.4",
-    version: "v0.0.4",
+    originalversion: "v0.0.5",
+    version: "v0.0.5",
 };
 
 //#endregion
@@ -224,10 +224,11 @@ function checkVersioning(data) {
         newdata.player.pos = [0, 0];
 
         newdata.world.meta.name = "Old Imported World";
-        newdata.world.meta.seed = null;
+        newdata.world.meta.seed = "No Seed";
         newdata.world.meta.type = "Old";
 
         newdata.originalversion = "Old";
+        newdata.version = "v0.0.1";
 
         if (data?.save?.inventory?.["1"] > 0) { newdata.player.inventory["Grass"] = data?.save?.inventory?.["1"]; }
         if (data?.save?.inventory?.["2"] > 0) { newdata.player.inventory["Sand"] = data?.save?.inventory?.["2"]; }
@@ -239,7 +240,7 @@ function checkVersioning(data) {
 
         newdata.world.rows = compressWorld(decompressWorld_OLD(data?.world));
 
-        return newdata;
+        data = newdata;
     }
 
     if (data?.version && data?.version != DefaultData?.version) {
@@ -255,6 +256,10 @@ function checkVersioning(data) {
 
         if (data?.version == "v0.0.3") {
             data.version = "v0.0.4"
+        }
+
+        if (data?.version == "v0.0.4") {
+            data.version = "v0.0.5"
         }
 
         return data;
